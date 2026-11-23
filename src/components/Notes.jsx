@@ -16,14 +16,22 @@ const startingNotes = [
 
 function Notes() {
   const [notes, setNotes] = useState(() => {
-  const saved = localStorage.getItem('notes')
-  return saved ? JSON.parse(saved) : startingNotes
-})
+    const saved = localStorage.getItem('notes')
+    return saved ? JSON.parse(saved) : startingNotes
+  })
   const [form, setForm] = useState({ title: '', body: '' })
   const [search, setSearch] = useState('')
+
   useEffect(() => {
-  localStorage.setItem('notes', JSON.stringify(notes))
-}, [notes])
+    localStorage.setItem('notes', JSON.stringify(notes))
+  }, [notes])
+
+  useEffect(() => {
+    const id = setTimeout(() => {
+      localStorage.setItem('draft', JSON.stringify(form))
+    }, 1000)
+    return () => clearTimeout(id)
+  }, [form])
 
   const visibleNotes = notes.filter((note) =>
     note.title.toLowerCase().includes(search.toLowerCase())
